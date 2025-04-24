@@ -10,8 +10,6 @@ This project is for the mid-term of LIS 751 at the University of Wisconsin - Mad
 - **Record users' favorite and recommended dishes** or items at each store.
 - **Allow users to share their lists** of food places, ratings, and recommendations with others.
 - **Allow food stores to view users' feedback and ratings** for improvement.
-- **Automate data collection and reporting** to reduce manual efforts (**auto-updating dashboard** & **daily data fetch** from Amazon Best Sellers Website).
-- **Convert data into visual charts** for easier trend analysis and quick issue identification.
 
 ## ☞ Conceptual Design – ERD
 <img width="799" alt="image" src="https://github.com/user-attachments/assets/0b25b30d-6374-49e3-9865-860eb8d72944" />

@@ -1,0 +1,249 @@
+{\rtf1\ansi\ansicpg1252\cocoartf2761
+\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fswiss\fcharset0 Helvetica-Bold;\f1\fswiss\fcharset0 Helvetica;}
+{\colortbl;\red255\green255\blue255;\red0\green0\blue0;\red15\green121\blue165;\red15\green121\blue165;
+}
+{\*\expandedcolortbl;;\cssrgb\c0\c0\c0;\cssrgb\c0\c54942\c70689;\cssrgb\c0\c54942\c70689;
+}
+\paperw11900\paperh16840\margl1440\margr1440\vieww11520\viewh8400\viewkind0
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+
+\f0\b\fs28 \cf2 CREATE TABLES
+\f1\b0\fs24 \cf3 \
+# Users Table\cf0 \
+CREATE TABLE Users (\
+    UserID INT AUTO_INCREMENT PRIMARY KEY,\
+    UserFname VARCHAR(50) NOT NULL,\
+    UserLname VARCHAR(50) NOT NULL,\
+    UserEmail VARCHAR(100) NOT NULL UNIQUE,\
+    UserPassword VARCHAR(255) NOT NULL\
+);\
+\
+\cf3 # Dishes Table\cf0 \
+CREATE TABLE Dishes (\
+    DishID INT AUTO_INCREMENT PRIMARY KEY,\
+    DishName VARCHAR(100) NOT NULL,\
+    DishCategory ENUM('Appetizer', 'Main Course', 'Dessert', 'Beverage', 'Soup', 'Snack', 'Other') NOT NULL,\
+    DishPrice DECIMAL(5,2) NOT NULL DEFAULT 0.00\
+);\
+\
+\cf3 # Locations Table\cf0 \
+CREATE TABLE Locations (\
+    LocationID INT AUTO_INCREMENT PRIMARY KEY,\
+    LocationCountry VARCHAR(100) NOT NULL,\
+    LocationState VARCHAR(100),\
+    LocationCity VARCHAR(100),\
+    LocationAddress VARCHAR(255) NOT NULL,\
+    LocationPostalCode VARCHAR(20)\
+);\
+\
+\cf3 # FoodStores Table \cf0 \
+CREATE TABLE FoodStores (\
+    FoodStoreID INT AUTO_INCREMENT PRIMARY KEY,\
+    FoodStoreName VARCHAR(100) NOT NULL,\
+    FoodStoreStyle SET('French', 'Italian', 'Japanese', 'Chinese', 'American', 'Mexican', 'Korean', 'Indian', 'Thai', 'Vegan', 'Middle Eastern', 'Mediterranean', 'Other') NOT NULL,\
+    FoodStoreType SET('Restaurant', 'Cafe', 'Beverage Shop', 'Fast Food', 'Buffet', 'Takeout', 'Fine Dining', 'Casual Dining', 'Food Truck', 'Bakery', 'Bar', 'Ice Cream', 'Pizzeria', 'Sushi Bar', 'Fast Casual', 'Pub', 'Diner', 'Other') NOT NULL,\
+    FoodStoreAcceptsReservations BOOLEAN DEFAULT FALSE,\
+    LocationID INT NOT NULL,\
+    FOREIGN KEY (LocationID) REFERENCES Locations(LocationID)\
+);\
+\
+\cf3 # Store_Visited Table\cf0 \
+CREATE TABLE Stores_Visited (\
+    StoreVisitID INT AUTO_INCREMENT PRIMARY KEY,\
+    StoreVisitDate DATE NOT NULL,\
+    StoreVisitRating INT DEFAULT 3 CHECK (StoreVisitRating BETWEEN 1 AND 5),\
+    StoreVisitDescription TEXT,\
+    UserID INT NOT NULL,\
+    FoodStoreID INT NOT NULL,\
+    FOREIGN KEY (UserID) REFERENCES Users(UserID),\
+    FOREIGN KEY (FoodStoreID) REFERENCES FoodStores(FoodStoreID)\
+);\
+\
+\cf3 # Dish_Reviews Table\cf0 \
+CREATE TABLE Dish_Reviews (\
+    DishReviewID INT AUTO_INCREMENT PRIMARY KEY,\
+    DishReviewDate DATE NOT NULL,\
+    DishReviewRating INT DEFAULT 3 CHECK (DishReviewRating BETWEEN 1 AND 5),\
+    DishReviewDescription TEXT,\
+    UserID INT NOT NULL,\
+    DishID INT NOT NULL,\
+    FOREIGN KEY (UserID) REFERENCES Users(UserID),\
+    FOREIGN KEY (DishID) REFERENCES Dishes(DishID)\
+);\
+\
+\cf3 # FoodStore_Dishes Table\cf0 \
+CREATE TABLE FoodStore_Dishes (\
+    FoodStoreDishID INT AUTO_INCREMENT PRIMARY KEY,\
+    FoodStoreID INT NOT NULL,\
+    DishID INT NOT NULL,\
+    FOREIGN KEY (FoodStoreID) REFERENCES FoodStores(FoodStoreID),\
+    FOREIGN KEY (DishID) REFERENCES Dishes(DishID),\
+    CONSTRAINT UC_FoodStore_Dishes UNIQUE (FoodStoreID, DishID)\
+);\
+\
+
+\f0\b\fs28 INSERT DATA\
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+
+\f1\b0\fs24 \cf4 # Users Table\
+\cf2 INSERT INTO Users (UserFname, UserLname, UserEmail, UserPassword)\
+VALUES \
+('John', 'Doe', 'john.doe@example.com', 'password123'),\
+('Jane', 'Smith', 'jane.smith@example.com', 'password456'),\
+('Michael', 'Brown', 'michael.brown@example.com', 'password789'),\
+('Emily', 'Davis', 'emily.davis@example.com', 'password321'),\
+('David', 'Wilson', 'david.wilson@example.com', 'password654'),\
+('Olivia', 'Taylor', 'olivia.taylor@example.com', 'password987'),\
+('James', 'Moore', 'james.moore@example.com', 'password135'),\
+('Isabella', 'Anderson', 'isabella.anderson@example.com', 'password246'),\
+('Liam', 'Thomas', 'liam.thomas@example.com', 'password369'),\
+('Sophia', 'Jackson', 'sophia.jackson@example.com', 'password741');\
+\
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf4 # Dishes Table\
+\cf2 INSERT INTO Dishes (DishName, DishCategory, DishPrice)\
+VALUES \
+('Margherita Pizza', 'Main Course', 12.99),\
+('California Roll', 'Appetizer', 8.99),\
+('Cheeseburger', 'Main Course', 6.99),\
+('Croissant', 'Dessert', 3.50),\
+('Beef Taco', 'Main Course', 5.99),\
+('Spaghetti Bolognese', 'Main Course', 14.99),\
+('Fish & Chips', 'Main Course', 10.99),\
+('Pancakes', 'Dessert', 7.99),\
+('Vegan Burger', 'Main Course', 11.99),\
+('Vegetable Stir Fry', 'Main Course', 9.99);\
+\
+\cf4 # Locations Table\
+\cf2 INSERT INTO Locations (LocationCountry, LocationState, LocationCity, LocationAddress, LocationPostalCode)\
+VALUES \
+('USA', 'California', 'Los Angeles', '123 Sunset Blvd', '90001'),\
+('USA', 'California', 'San Francisco', '456 Market St', '94105'),\
+('USA', 'New York', 'New York City', '789 Broadway St', '10001'),\
+('USA', 'Texas', 'Austin', '101 Congress Ave', '73301'),\
+('Canada', 'Ontario', 'Toronto', '202 King St', 'M5V 1X4'),\
+('Canada', 'British Columbia', 'Vancouver', '303 Granville St', 'V6B 1V7'),\
+('UK', 'England', 'London', '404 Oxford St', 'W1D 1BS'),\
+('UK', 'Scotland', 'Edinburgh', '505 Princes St', 'EH2 4BG'),\
+('Australia', 'New South Wales', 'Sydney', '606 George St', '2000'),\
+('Australia', 'Victoria', 'Melbourne', '707 Collins St', '3000');\
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 \
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf4 # FoodStores Table\
+\cf2 INSERT INTO FoodStores (FoodStoreName, FoodStoreStyle, FoodStoreType, FoodStoreAcceptsReservations, LocationID)\
+VALUES \
+('Pizza Place', 'Italian', 'Restaurant', TRUE, 1),\
+('Sushi World', 'Japanese', 'Restaurant', FALSE, 2),\
+('Burger King', 'American', 'Fast Food', TRUE, 3),\
+('Caf\'e9 Mocha', 'French', 'Cafe', FALSE, 4),\
+('Taco Bell', 'Mexican', 'Fast Food', TRUE, 5),\
+('Pasta Paradise', 'Italian', 'Restaurant', TRUE, 6),\
+('Fish & Chips', 'Other', 'Restaurant', FALSE, 7),\
+('The Diner', 'Other', 'Diner', TRUE, 8),\
+('Vegan Delight', 'Vegan', 'Restaurant', FALSE, 9),\
+('Greenhouse Cafe', 'Vegan', 'Cafe', TRUE, 10);\
+\
+\cf4 # Store_Visited Table\
+\cf2 INSERT INTO Stores_Visited (StoreVisitDate, StoreVisitRating, StoreVisitDescription, UserID, FoodStoreID)\
+VALUES \
+('2023-01-15', 5, 'Great pizza, friendly staff!', 1, 32),\
+('2023-02-20', 4, 'Fresh sushi, nice ambiance', 2, 33),\
+('2023-03-05', 3, 'Average experience, good fries', 3, 33), \
+('2023-04-10', 4, 'Lovely coffee and pastries', 4, 34), \
+('2023-05-21', 5, 'Delicious tacos, very spicy', 5, 31),  \
+('2023-06-18', 4, 'Pasta was amazing, good portion', 6, 36),\
+('2023-07-02', 3, 'Decent fish, not great service', 7, 38), \
+('2023-08-15', 4, 'Friendly diner, classic American food', 8, 39),  \
+('2023-09-01', 2, 'Lack of variety, but good vegan options', 9, 40), \
+('2023-10-10', 5, 'Excellent vegetarian food, cozy place', 10, 36); \
+\
+\cf4 # Dish_Reviews Table\
+\cf2 INSERT INTO Dish_Reviews (DishReviewDate, DishReviewRating, DishReviewDescription, UserID, DishID)\
+VALUES \
+('2023-01-20', 5, 'Amazing flavor, highly recommend!', 1, 1),\
+('2023-02-25', 4, 'Fresh and tasty, but a little too salty', 2, 3),\
+('2023-03-10', 3, 'The burger was good, but the fries were cold', 3, 1),\
+('2023-04-12', 5, 'Perfect croissant, buttery and flaky', 4, 4),\
+('2023-05-25', 4, 'The tacos were great, a bit too spicy', 5, 5),\
+('2023-06-20', 4, 'Good pasta, could use more sauce', 6, 5),\
+('2023-07-05', 3, 'Not the best fish, but good chips', 7, 7),\
+('2023-08-18', 4, 'Classic diner food, nice atmosphere', 8, 8),\
+('2023-09-05', 2, 'The vegan options were limited', 9, 9),\
+('2023-10-12', 5, 'Amazing vegetarian options, will return!', 10, 2);\
+\
+\cf4 # FoodStore_Dishes Table\
+\cf2 INSERT INTO FoodStore_Dishes (FoodStoreID, DishID)\
+VALUES \
+(31, 1),\
+(32, 2),\
+(33, 3),\
+(34, 4),\
+(33, 5),\
+(36, 6),\
+(36, 7),\
+(38, 8),\
+(39, 9),\
+(40, 10);\
+\
+\pard\pardeftab720\partightenfactor0
+
+\f0\b\fs28 \cf2 Query
+\f1\b0\fs24 \
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf3 # \expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec2 Display all users and the dishes they reviewed\cf2 \kerning1\expnd0\expndtw0 \outl0\strokewidth0 \
+CREATE VIEW UserDishReviews AS\
+SELECT u.UserFname, u.UserLname, d.DishName, r.DishReviewRating, r.DishReviewDescription\
+FROM Dish_Reviews r\
+INNER JOIN Users u \
+ON r.UserID = u.UserID\
+INNER JOIN Dishes d \
+ON r.DishID = d.DishID;\
+\
+
+\f0\b \cf3 # 
+\f1\b0 \expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec2 Display food stores and their location details\cf2 \kerning1\expnd0\expndtw0 \outl0\strokewidth0 \
+CREATE VIEW FoodStoreLocation AS\
+SELECT f.FoodStoreName, f.FoodStoreStyle, f.FoodStoreType, l.LocationCity, l.LocationState, l.LocationAddress\
+FROM FoodStores f\
+JOIN Locations l ON f.LocationID = l.LocationID;\
+\
+\cf3 # \expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec2 Display all dishes along with their average review rating\
+\cf2 CREATE VIEW DishAverageRating AS\
+SELECT d.DishName, AVG(r.DishReviewRating) AS AvgRating\
+FROM Dishes d\
+JOIN Dish_Reviews r ON d.DishID = r.DishID\
+GROUP BY d.DishID;\
+\
+\cf3 # Display all users who have visited a specific food store\
+\cf2 CREATE VIEW UsersVisitedFoodStore AS\
+SELECT u.UserFname, u.UserLname, s.StoreVisitDate, s.StoreVisitRating\
+FROM Stores_Visited s\
+JOIN Users u ON s.UserID = u.UserID\
+JOIN FoodStores f ON s.FoodStoreID = f.FoodStoreID\
+WHERE f.FoodStoreID = 33;\
+\
+\cf3 # Display food stores and their dishes\
+\cf2 CREATE VIEW FoodStoreDishes AS\
+SELECT f.FoodStoreName, d.DishName\
+FROM FoodStores f\
+JOIN FoodStore_Dishes fsd ON f.FoodStoreID = fsd.FoodStoreID\
+JOIN Dishes d ON fsd.DishID = d.DishID;\
+\
+\cf3 # Display the average rating for each food store based on store visits\
+\cf2 CREATE VIEW FoodStoreAvgVisitRating AS\
+SELECT f.FoodStoreName, AVG(s.StoreVisitRating) AS AvgVisitRating\
+FROM FoodStores f\
+JOIN Stores_Visited s ON f.FoodStoreID = s.FoodStoreID\
+GROUP BY f.FoodStoreID;\
+\
+\cf3 # Display the count of reviews for each dish\
+\cf2 CREATE VIEW DishReviewCount AS\
+SELECT d.DishName, COUNT(r.DishReviewID) AS ReviewCount\
+FROM Dishes d\
+JOIN Dish_Reviews r ON d.DishID = r.DishID\
+GROUP BY d.DishID;\
+}

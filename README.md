@@ -17,4 +17,4 @@ This project is for the mid-term of LIS 751 at the University of Wisconsin - Mad
 <img width="799" alt="image" src="https://github.com/user-attachments/assets/0b25b30d-6374-49e3-9865-860eb8d72944" />
 
 ## ☞ For More Detailed Information
-For more detailed information on the project, please see the [document here](LIS751_SQL Relational Database Project.pdf)
+For more detailed information on the project, please see the [document here](./LIS751_SQL Relational Database Project.pdf)
